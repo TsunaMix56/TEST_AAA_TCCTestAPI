@@ -1,3 +1,4 @@
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using TCCTestAPI.Tests.Models;
@@ -400,23 +401,23 @@ public class UserLoginServiceMoqTests
         // Arrange
         var mockService = new Mock<IUserLoginService>();
 
-        // Setup specific combinations first (more specific setups should come first)
-        mockService.Setup(x => x.ValidateUserCredentials("mixtest", "12345678"))
-                   .Returns(true);
+        // Setup using callback pattern for complex matching - this approach works better than multiple setups
+        mockService.Setup(x => x.ValidateUserCredentials(It.IsAny<string>(), It.IsAny<string>()))
+                   .Returns<string, string>((username, password) =>
+                   {
+                       // Define specific valid combinations
+                       var validCombinations = new[]
+                       {
+                           ("mixtest", "12345678"),
+                           ("test", "12345678"),
+                           ("mixtest", "123")
+                       };
 
-        mockService.Setup(x => x.ValidateUserCredentials("test", "12345678"))
-                   .Returns(true);
+                       return validCombinations.Any(combo =>
+                           combo.Item1 == username && combo.Item2 == password);
+                   });
 
-        mockService.Setup(x => x.ValidateUserCredentials("mixtest", "123"))
-                   .Returns(true);
-
-        // Default setup for other cases
-        mockService.Setup(x => x.ValidateUserCredentials(
-                       It.IsAny<string>(),
-                       It.IsAny<string>()))
-                   .Returns(false);
-
-        _output.WriteLine("Set up complex matching rules");
+        _output.WriteLine("Set up complex matching rules using callback pattern");
 
         // Act & Assert
         mockService.Object.ValidateUserCredentials("mixtest", "12345678").Should().BeTrue();

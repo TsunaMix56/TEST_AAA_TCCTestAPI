@@ -25,3 +25,14 @@ public class AuthenticationResponse
     /// </summary>
     public string Message { get; set; } = string.Empty;
 }
+
+/// <summary>
+/// Response model for user login API endpoint
+/// </summary>
+public class UserLoginResponse
+{
+    /// <summary>
+    /// Welcome message for the user
+    /// </summary>
+    public string Message { get; set; } = string.Empty;
+}

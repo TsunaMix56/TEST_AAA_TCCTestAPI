@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TCCTestAPI.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b3bedadc690a2498e1d30f1a061c5868a402eece")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36061fc45ceb77a2b95fd89cbd58deff75a7cdb2")]
 [assembly: System.Reflection.AssemblyProductAttribute("TCCTestAPI.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TCCTestAPI.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

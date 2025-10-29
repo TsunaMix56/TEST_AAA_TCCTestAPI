@@ -78,6 +78,55 @@ public class MockApiServer : IDisposable
                     .WithStatusCode(HttpStatusCode.BadRequest)
                     .WithHeader("Content-Type", "application/json")
                     .WithBodyAsJson(new { message = "Invalid JSON format" }));
+
+        // Mock successful account creation
+        _server
+            .Given(
+                Request.Create()
+                    .WithPath("/api/account/create")
+                    .UsingPost()
+                    .WithHeader("Authorization", "Bearer *")
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBodyAsJson(new { username = "mixtest", password = "11223344" }))
+            .RespondWith(
+                Response.Create()
+                    .WithStatusCode(HttpStatusCode.OK)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBodyAsJson(new CreateAccountResponse
+                    {
+                        Success = true,
+                        Message = "Account created successfully",
+                        UserId = "2",
+                        Username = "mixtest",
+                        CreatedAt = DateTime.UtcNow,
+                        CreatedBy = "TCCTest"
+                    }));
+
+        // Mock unauthorized access (no token)
+        _server
+            .Given(
+                Request.Create()
+                    .WithPath("/api/account/create")
+                    .UsingPost())
+            .RespondWith(
+                Response.Create()
+                    .WithStatusCode(HttpStatusCode.Unauthorized)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBodyAsJson(new { message = "Unauthorized" }));
+
+        // Mock conflict for duplicate username
+        _server
+            .Given(
+                Request.Create()
+                    .WithPath("/api/account/create")
+                    .UsingPost()
+                    .WithHeader("Authorization", "Bearer *")
+                    .WithBodyAsJson(new { username = "TCCTest", password = "*" }))
+            .RespondWith(
+                Response.Create()
+                    .WithStatusCode(HttpStatusCode.Conflict)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBodyAsJson(new { message = "Username already exists" }));
     }
 
     public void Reset()
